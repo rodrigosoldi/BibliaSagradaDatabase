@@ -46,8 +46,8 @@ public final class BibliaSagradaController: BibliaSagradaControllable, @unchecke
                 guard let self else { return }
                 let testaments = Array(self.realm.objects(DBTestament.self))
                 let dbBible = DBBible(
-                    antigoTestamento: testaments[0],
-                    novoTestamento: testaments[1])
+                    oldTestament: testaments[0],
+                    newTestament: testaments[1])
                 let bible = self.wrapper.map(dbBible)
                 continuation.resume(returning: bible)
             }

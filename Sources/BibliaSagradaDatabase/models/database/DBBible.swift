@@ -6,6 +6,6 @@
 //
 
 struct DBBible {
-    let antigoTestamento: DBTestament
-    let novoTestamento: DBTestament
+    let oldTestament: DBTestament
+    let newTestament: DBTestament
 }
