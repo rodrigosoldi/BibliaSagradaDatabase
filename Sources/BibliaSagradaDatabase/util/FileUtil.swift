@@ -17,23 +17,18 @@ struct FileUtilImpl: FileUtil {
 
     func databasePath() throws -> URL {
         let bundle = try self.bundle()
-//        let bundlePath = bundle.bundlePath
-//        let path = bundlePath + "/" + databaseName
-        guard let url = bundle.url(forResource: "database", withExtension: "realm") else {
-            throw BibliaSagradaDatabaseError.unableToFindDatabaseFile
-        }
-        
-        return url
+        let bundlePath = bundle.bundlePath
+        let path = bundlePath + "/" + databaseName
+        return URL(filePath: path)
     }
 
     private func bundle() throws -> Bundle {
-        return Bundle.module
-//        let bundlePath = Bundle.module.bundlePath
-//        guard let bundle = Bundle(path: bundlePath) else {
-//            throw BibliaSagradaDatabaseError.unableToFindDatabaseFile
-//        }
-//
-//        return bundle
+        let bundlePath = Bundle.module.bundlePath
+        guard let bundle = Bundle(path: bundlePath) else {
+            throw BibliaSagradaDatabaseError.unableToFindDatabaseFile
+        }
+
+        return bundle
     }
 
 }
