@@ -27,16 +27,9 @@ public final class BibliaSagradaController: BibliaSagradaControllable, @unchecke
             fileURL: fileURL,
             readOnly: true)
         try queue.sync {
-            print("VAI CRIAR INSTANCIA")
-            do {
-                self.realm = try Realm(
-                    configuration: configuration,
-                    queue: queue)
-                print("CRIOU INSTANCIA")
-            } catch {
-                print("DEU ERRO: \(error)")
-                throw error
-            }
+            self.realm = try Realm(
+                configuration: configuration,
+                queue: queue)
         }
     }
     
