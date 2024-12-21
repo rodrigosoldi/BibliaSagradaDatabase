@@ -10,7 +10,7 @@ import Foundation
 
 class DBBook: Object {
     
-    @Persisted(primaryKey: true) var id: UUID
+    @Persisted(primaryKey: true) var id: Int
     @Persisted var name: String
     @Persisted var captions: List<DBCaption>
     
