@@ -11,6 +11,12 @@ public struct Book {
     public let id: Int
     public let name: String
     public let captions: [Caption]
+    
+    public init(id: Int, name: String, captions: [Caption]) {
+        self.id = id
+        self.name = name
+        self.captions = captions
+    }
 }
 
 extension Book {

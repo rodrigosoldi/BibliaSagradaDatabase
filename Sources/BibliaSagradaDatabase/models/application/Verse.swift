@@ -11,6 +11,12 @@ public struct Verse {
     public let id: UUID
     public let name: String
     public let text: String
+    
+    public init(id: UUID, name: String, text: String) {
+        self.id = id
+        self.name = name
+        self.text = text
+    }
 }
 
 extension Verse {

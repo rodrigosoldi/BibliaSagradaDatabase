@@ -11,6 +11,12 @@ public struct Caption {
     public let id: UUID
     public let name: String
     public let verses: [Verse]
+    
+    public init(id: UUID, name: String, verses: [Verse]) {
+        self.id = id
+        self.name = name
+        self.verses = verses
+    }
 }
 
 extension Caption {

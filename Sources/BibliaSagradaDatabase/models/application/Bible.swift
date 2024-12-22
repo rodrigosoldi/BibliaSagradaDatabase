@@ -5,9 +5,14 @@
 //  Created by Rodrigo Soldi on 13/12/24.
 //
 
-public struct Bible {
+public struct Bible: @unchecked Sendable {
     public let oldTestament: Testament
     public let newTestament: Testament
+    
+    public init(oldTestament: Testament, newTestament: Testament) {
+        self.oldTestament = oldTestament
+        self.newTestament = newTestament
+    }
 }
 
 extension Bible {

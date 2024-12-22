@@ -11,6 +11,12 @@ public struct Testament {
     public let id: UUID
     public let name: String
     public let books: [Book]
+    
+    public init(id: UUID, name: String, books: [Book]) {
+        self.id = id
+        self.name = name
+        self.books = books
+    }
 }
 
 extension Testament {
