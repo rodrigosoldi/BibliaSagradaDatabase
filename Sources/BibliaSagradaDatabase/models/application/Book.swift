@@ -19,6 +19,8 @@ public struct Book {
     }
 }
 
+extension Book: Identifiable { }
+
 extension Book {
     
     public func contains(_ text: String) -> Bool {
