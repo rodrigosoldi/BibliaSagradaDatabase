@@ -19,6 +19,22 @@ public struct Caption {
     }
 }
 
+extension Caption: Identifiable {
+    
+}
+
+extension Caption: Hashable, Equatable {
+    
+    public static func ==(lhs: Caption, rhs: Caption) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+}
+
 extension Caption {
     
     public func contains(_ text: String) -> Bool {

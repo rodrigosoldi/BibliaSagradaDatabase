@@ -19,6 +19,22 @@ public struct Verse {
     }
 }
 
+extension Verse: Identifiable {
+    
+}
+
+extension Verse: Hashable, Equatable {
+    
+    public static func ==(lhs: Verse, rhs: Verse) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+}
+
 extension Verse {
     
     public func contains(_ text: String) -> Bool {
