@@ -21,6 +21,18 @@ public struct Book {
 
 extension Book: Identifiable { }
 
+extension Book: Hashable, Equatable {
+    
+    public static func ==(lhs: Book, rhs: Book) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+}
+
 extension Book {
     
     public func contains(_ text: String) -> Bool {

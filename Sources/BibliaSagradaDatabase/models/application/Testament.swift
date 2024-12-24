@@ -19,6 +19,22 @@ public struct Testament {
     }
 }
 
+extension Testament: Identifiable {
+    
+}
+
+extension Testament: Hashable, Equatable {
+    
+    public static func ==(lhs: Testament, rhs: Testament) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+}
+
 extension Testament {
     
     public func contains(_ text: String) -> Bool {
