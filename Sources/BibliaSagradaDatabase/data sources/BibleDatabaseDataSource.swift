@@ -12,34 +12,47 @@ protocol BibleDatabaseDataSource {
     func fetchBible() async throws -> Bible
 }
 
-final class BibleDatabaseDataSourceImpl: BibleDatabaseDataSource {
+final class BibleDatabaseDataSourceImpl: BibleDatabaseDataSource, @unchecked Sendable {
     
     private let databaseManager: DatabaseManager
     private let wrapper: Wrapper
+    private let queue: DispatchQueue
     
     convenience init() throws {
         try self.init(
-            wrapper: WrapperImpl(),
-            databaseManager: DatabaseManagerImpl())
+            wrapper: WrapperImpl())
     }
     
-    init(wrapper: Wrapper, databaseManager: DatabaseManager) throws {
+    init(wrapper: Wrapper) throws {
+        let queue = DispatchQueue(label: "com.soldi.BibliaSagradaDatabase.queue")
+        self.queue = queue
         self.wrapper = wrapper
-        self.databaseManager = databaseManager
+        self.databaseManager = try DatabaseManagerImpl(queue: queue)
     }
 
     func fetchBible() async throws -> Bible {
-        let testaments = try await databaseManager.fetchObjects(DBTestament.self)
-        
-        guard testaments.count == 2 else {
-            throw BSError.unableToFetchBible
+        try await withCheckedThrowingContinuation { continuation in
+            queue.async { [weak self] in
+                guard let self else {
+                    continuation.resume(throwing: BSError.objectDetached)
+                    return
+                }
+                
+                Task {
+                    let testaments = try await databaseManager.fetchObjects(DBTestament.self, queue: queue)
+                    
+                    guard testaments.count == 2 else {
+                        throw BSError.unableToFetchBible
+                    }
+                    
+                    let dbBible = DBBible(
+                        oldTestament: testaments[0],
+                        newTestament: testaments[1])
+                    let bible = wrapper.map(dbBible)
+                    continuation.resume(returning: bible)
+                }
+            }
         }
-        
-        let dbBible = DBBible(
-            oldTestament: testaments[0],
-            newTestament: testaments[1])
-        let bible = wrapper.map(dbBible)
-        return bible
     }
     
 }

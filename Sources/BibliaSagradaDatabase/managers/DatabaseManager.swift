@@ -9,26 +9,26 @@ import Foundation
 import RealmSwift
 
 protocol DatabaseManager {
-    func fetchObjects<T: RealmFetchable>(_ type: T.Type) async throws -> [T]
+    func fetchObjects<T: RealmFetchable>(_ type: T.Type, queue: DispatchQueue) async throws -> [T]
 }
 
 final class DatabaseManagerImpl: DatabaseManager, @unchecked Sendable {
     
     private let fileUtil: FileUtil
-    
-    private let queue: DispatchQueue = DispatchQueue(label: "com.soldi.BibliaSagradaDatabase.queue")
+    private let queue: DispatchQueue
     private var realm: Realm!
     
-    convenience init() throws {
-        try self.init(fileUtil: FileUtilImpl())
+    convenience init(queue: DispatchQueue) throws {
+        try self.init(fileUtil: FileUtilImpl(), queue: queue)
     }
     
-    init(fileUtil: FileUtil) throws {
+    init(fileUtil: FileUtil, queue: DispatchQueue) throws {
         self.fileUtil = fileUtil
         let fileURL = try fileUtil.databasePath()
         let configuration = Realm.Configuration(
             fileURL: fileURL,
             readOnly: true)
+        self.queue = queue
         try queue.sync {
             self.realm = try Realm(
                 configuration: configuration,
@@ -36,7 +36,7 @@ final class DatabaseManagerImpl: DatabaseManager, @unchecked Sendable {
         }
     }
     
-    func fetchObjects<T>(_ type: T.Type) async throws -> [T] where T: RealmFetchable {
+    func fetchObjects<T>(_ type: T.Type, queue: DispatchQueue) async throws -> [T] where T: RealmFetchable {
         try await withCheckedThrowingContinuation { continuation in
             queue.async { [weak self] in
                 guard let self else {
