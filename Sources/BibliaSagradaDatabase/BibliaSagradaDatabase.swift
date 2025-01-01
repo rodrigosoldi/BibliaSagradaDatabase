@@ -4,11 +4,11 @@
 import Foundation
 import RealmSwift
 
-public protocol BibliaSagradaControllable {
+protocol BibliaSagradaControllable {
     func fetchBible() async throws -> Bible
 }
 
-public final class BibliaSagradaController: BibliaSagradaControllable, @unchecked Sendable {
+final class BibliaSagradaController: BibliaSagradaControllable, @unchecked Sendable {
     
     private let fileUtil: FileUtil
     private let wrapper: Wrapper

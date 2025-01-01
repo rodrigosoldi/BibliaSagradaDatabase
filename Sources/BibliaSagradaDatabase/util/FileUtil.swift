@@ -25,7 +25,7 @@ struct FileUtilImpl: FileUtil {
     private func bundle() throws -> Bundle {
         let bundlePath = Bundle.module.bundlePath
         guard let bundle = Bundle(path: bundlePath) else {
-            throw BibliaSagradaDatabaseError.unableToFindDatabaseFile
+            throw BSError.unableToFindDatabaseFile
         }
 
         return bundle
