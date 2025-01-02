@@ -5,44 +5,93 @@
 //  Created by Rodrigo Soldi on 13/12/24.
 //
 
-protocol Wrapper {
-    func map(_ dbBible: DBBible) -> Bible
+protocol Wrapper<T, V>: Sendable {
+    associatedtype T
+    associatedtype V
+    
+    func map(_ object: T) -> V
 }
 
-struct WrapperImpl: Wrapper {
+struct BibleWrapper: Wrapper {
+    typealias T = [DBTestament]
+    typealias V = Bible
     
-    func map(_ dbBible: DBBible) -> Bible {
+    private let testamentWrapper: TestamentWrapper
+    
+    init(testamentWrapper: TestamentWrapper = TestamentWrapper()) {
+        self.testamentWrapper = testamentWrapper
+    }
+    
+    func map(_ object: [DBTestament]) -> Bible {        
         return Bible(
-            oldTestament: mapTestament(dbBible.oldTestament),
-            newTestament: mapTestament(dbBible.newTestament))
+            oldTestament: testamentWrapper.map(object[0]),
+            newTestament: testamentWrapper.map(object[1]))
+    }
+}
+
+struct TestamentWrapper: Wrapper {
+    typealias T = DBTestament
+    typealias V = Testament
+    
+    private let bookWrapper: BookWrapper
+    
+    init(bookWrapper: BookWrapper = BookWrapper()) {
+        self.bookWrapper = bookWrapper
     }
     
-    private func mapTestament(_ dbTestament: DBTestament) -> Testament {
+    func map(_ object: DBTestament) -> Testament {
         return Testament(
-            id: dbTestament.id,
-            name: dbTestament.name,
-            books: dbTestament.books.compactMap(mapBook(_:)))
+            id: object.id,
+            name: object.name,
+            books: object.books.compactMap(bookWrapper.map(_:)))
+    }
+}
+
+struct BookWrapper: Wrapper {
+    typealias T = DBBook
+    typealias V = Book
+    
+    private let captionWrapper: CaptionWrapper
+    
+    init(captionWrapper: CaptionWrapper = CaptionWrapper()) {
+        self.captionWrapper = captionWrapper
     }
     
-    private func mapBook(_ dbBook: DBBook) -> Book {
+    func map(_ object: DBBook) -> Book {
         return Book(
-            id: dbBook.id,
-            name: dbBook.name,
-            captions: dbBook.captions.compactMap(mapCaption(_:)))
+            id: object.id,
+            name: object.name,
+            captions: object.captions.compactMap(captionWrapper.map(_:)))
+    }
+
+}
+
+struct CaptionWrapper: Wrapper {
+    typealias T = DBCaption
+    typealias V = Caption
+    
+    private let verseWrapper: VerseWrapper
+    
+    init(verseWrapper: VerseWrapper = VerseWrapper()) {
+        self.verseWrapper = verseWrapper
     }
     
-    private func mapCaption(_ dbCaption: DBCaption) -> Caption {
+    func map(_ object: DBCaption) -> Caption {
         return Caption(
-            id: dbCaption.id,
-            name: dbCaption.name,
-            verses: dbCaption.verses.compactMap(mapVerse(_:)))
+            id: object.id,
+            name: object.name,
+            verses: object.verses.compactMap(verseWrapper.map(_:)))
     }
-    
-    private func mapVerse(_ dbVerse: DBVerse) -> Verse {
+}
+
+struct VerseWrapper: Wrapper {
+    typealias T = DBVerse
+    typealias V = Verse
+ 
+    func map(_ object: DBVerse) -> Verse {
         return Verse(
-            id: dbVerse.id,
-            name: dbVerse.name,
-            text: dbVerse.text)
+            id: object.id,
+            name: object.name,
+            text: object.text)
     }
-    
 }

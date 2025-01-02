@@ -9,26 +9,25 @@ import Foundation
 import RealmSwift
 
 protocol DatabaseManager {
-    func fetchObjects<T: RealmFetchable>(_ type: T.Type, queue: DispatchQueue) async throws -> [T]
+    func fetchObject<T: RealmFetchable, R>(_ type: T.Type, wrapper: any Wrapper<[T], R>) async throws -> R
 }
 
 final class DatabaseManagerImpl: DatabaseManager, @unchecked Sendable {
     
     private let fileUtil: FileUtil
-    private let queue: DispatchQueue
+    private let queue: DispatchQueue = DispatchQueue(label: "com.soldi.BibliaSagradaDatabase.queue")
     private var realm: Realm!
     
-    convenience init(queue: DispatchQueue) throws {
-        try self.init(fileUtil: FileUtilImpl(), queue: queue)
+    convenience init() throws {
+        try self.init(fileUtil: FileUtilImpl())
     }
     
-    init(fileUtil: FileUtil, queue: DispatchQueue) throws {
+    init(fileUtil: FileUtil) throws {
         self.fileUtil = fileUtil
         let fileURL = try fileUtil.databasePath()
         let configuration = Realm.Configuration(
             fileURL: fileURL,
             readOnly: true)
-        self.queue = queue
         try queue.sync {
             self.realm = try Realm(
                 configuration: configuration,
@@ -36,7 +35,7 @@ final class DatabaseManagerImpl: DatabaseManager, @unchecked Sendable {
         }
     }
     
-    func fetchObjects<T>(_ type: T.Type, queue: DispatchQueue) async throws -> [T] where T: RealmFetchable {
+    func fetchObject<T, R>(_ type: T.Type, wrapper: any Wrapper<[T], R>) async throws -> R where T : RealmFetchable {
         try await withCheckedThrowingContinuation { continuation in
             queue.async { [weak self] in
                 guard let self else {
@@ -45,7 +44,8 @@ final class DatabaseManagerImpl: DatabaseManager, @unchecked Sendable {
                 }
                 
                 let objects = Array(self.realm.objects(type))
-                continuation.resume(returning: objects)
+                let object: R = wrapper.map(objects)
+                continuation.resume(returning: object)
             }
         }
     }
