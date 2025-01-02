@@ -14,20 +14,26 @@ protocol DatabaseManager {
 
 final class DatabaseManagerImpl: DatabaseManager, @unchecked Sendable {
     
+    private typealias K = Constants
+    private struct Constants {
+        static let queueLabel: String = "com.soldi.BibliaSagradaDatabase.queue"
+    }
+    
     private let fileUtil: FileUtil
-    private let queue: DispatchQueue = DispatchQueue(label: "com.soldi.BibliaSagradaDatabase.queue")
+    private let queue: DispatchQueue
     private var realm: Realm!
     
     convenience init() throws {
         try self.init(fileUtil: FileUtilImpl())
     }
     
-    init(fileUtil: FileUtil) throws {
+    init(fileUtil: FileUtil, readOnly: Bool = true, queue: DispatchQueue = DispatchQueue(label: K.queueLabel)) throws {
         self.fileUtil = fileUtil
+        self.queue = queue
         let fileURL = try fileUtil.databasePath()
         let configuration = Realm.Configuration(
             fileURL: fileURL,
-            readOnly: true)
+            readOnly: readOnly)
         try queue.sync {
             self.realm = try Realm(
                 configuration: configuration,

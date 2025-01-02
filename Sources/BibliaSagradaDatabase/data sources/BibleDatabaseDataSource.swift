@@ -28,7 +28,7 @@ final class BibleDatabaseDataSourceImpl: BibleDatabaseDataSource, @unchecked Sen
     }
 
     func fetchBible() async throws -> Bible {
-         try await databaseManager.fetchObject(DBTestament.self, wrapper: bibleWrapper)        
+        try await databaseManager.fetchObject(DBTestament.self, wrapper: bibleWrapper)        
     }
     
 }
