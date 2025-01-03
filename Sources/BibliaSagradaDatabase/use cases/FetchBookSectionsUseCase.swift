@@ -27,6 +27,10 @@ public struct FetchBookSectionsUseCaseImpl: FetchBookSectionsUseCase {
         static let cartasGerais: [Int] = Array(58...65) // Hebreus a Judas
         static let apocalipse: [Int] = [73] // Apenas Apocalipse
     }
+    
+    public init() {
+        
+    }
 
     public func execute() async throws -> [BookSection] {
         return [
