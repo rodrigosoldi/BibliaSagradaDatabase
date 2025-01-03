@@ -17,14 +17,14 @@ public struct FetchBookSectionsUseCaseImpl: FetchBookSectionsUseCase {
     private typealias K = Constants
     private struct Constants {
         static let pentateuco: [Int] = Array(1...5) // Gênesis a Deuteronômio
-        static let historicos: [Int] = Array(6...17) // Josué a Ester
-        static let poeticos: [Int] = Array(18...22) // Jó a Cântico dos Cânticos
-        static let profetasMaiores: [Int] = Array(23...27) // Isaías a Daniel
-        static let profetasMenores: [Int] = Array(28...39) // Oseias a Malaquias
-        static let evangelhos: [Int] = Array(40...43) // Mateus a João
-        static let atosDosApostolos: [Int] = [44] // Apenas Atos
-        static let cartasPaulinas: [Int] = Array(45...57) // Romanos a Filemom
-        static let cartasGerais: [Int] = Array(58...65) // Hebreus a Judas
+        static let historicos: [Int] = Array(6...21) // Josué a Ester
+        static let sapienciais: [Int] = Array(22...28) // Jó a Cântico dos Cânticos
+        static let profetasMaiores: [Int] = Array(29...33) // Isaías a Daniel
+        static let profetasMenores: [Int] = Array(34...45) // Oseias a Malaquias
+        static let evangelhos: [Int] = Array(46...49) // Mateus a João
+        static let atosDosApostolos: [Int] = [50] // Apenas Atos
+        static let cartasPaulinas: [Int] = Array(51...64) // Romanos a Filemom
+        static let cartasGerais: [Int] = Array(65...72) // Hebreus a Judas
         static let apocalipse: [Int] = [73] // Apenas Apocalipse
     }
     
@@ -43,9 +43,9 @@ public struct FetchBookSectionsUseCaseImpl: FetchBookSectionsUseCase {
                 type: .historicos,
                 bookIDs: K.historicos),
             BookSection(
-                title: "Poéticos",
-                type: .poeticos,
-                bookIDs: K.poeticos),
+                title: "Sapienciais",
+                type: .sapienciais,
+                bookIDs: K.sapienciais),
             BookSection(
                 title: "Profetas Maiores",
                 type: .profetasMaiores,

@@ -8,7 +8,7 @@
 public enum BookSectionType: Sendable {
     case pentateuco
     case historicos
-    case poeticos
+    case sapienciais
     case profetasMaiores
     case profetasMenores
     case evangelhos
