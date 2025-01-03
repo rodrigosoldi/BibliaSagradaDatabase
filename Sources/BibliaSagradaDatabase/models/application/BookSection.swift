@@ -13,7 +13,7 @@ public struct BookSection {
     public let type: BookSectionType
     public let bookIDs: [Int]
     
-    init(id: UUID = UUID(), title: String, type: BookSectionType, bookIDs: [Int]) {
+    public init(id: UUID = UUID(), title: String, type: BookSectionType, bookIDs: [Int]) {
         self.id = id
         self.title = title
         self.type = type
