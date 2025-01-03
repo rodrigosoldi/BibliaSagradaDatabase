@@ -20,11 +20,11 @@ public struct FetchBookSectionsUseCaseImpl: FetchBookSectionsUseCase {
         static let historicos: [Int] = Array(6...21) // Josué a Ester
         static let sapienciais: [Int] = Array(22...28) // Jó a Cântico dos Cânticos
         static let profetasMaiores: [Int] = Array(29...33) // Isaías a Daniel
-        static let profetasMenores: [Int] = Array(34...45) // Oseias a Malaquias
-        static let evangelhos: [Int] = Array(46...49) // Mateus a João
-        static let atosDosApostolos: [Int] = [50] // Apenas Atos
-        static let cartasPaulinas: [Int] = Array(51...64) // Romanos a Filemom
-        static let cartasGerais: [Int] = Array(65...72) // Hebreus a Judas
+        static let profetasMenores: [Int] = Array(34...46) // Oseias a Malaquias
+        static let evangelhos: [Int] = Array(47...50) // Mateus a João
+        static let atosDosApostolos: [Int] = [51] // Apenas Atos
+        static let cartasPaulinas: [Int] = Array(52...65) // Romanos a Filemom
+        static let cartasGerais: [Int] = Array(66...72) // Hebreus a Judas
         static let apocalipse: [Int] = [73] // Apenas Apocalipse
     }
     
