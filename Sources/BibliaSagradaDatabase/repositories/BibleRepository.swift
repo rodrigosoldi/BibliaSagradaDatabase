@@ -10,6 +10,7 @@
 
 protocol BibleRepository {
     func fetchBible() async throws -> Bible
+    func fetchBooks(booksIDs: [Int]) async throws -> [Book]
 }
 
 class BibleRepositoryImpl: BibleRepository {
@@ -31,6 +32,10 @@ class BibleRepositoryImpl: BibleRepository {
 
     func fetchBible() async throws -> Bible {
         try await bibleDatabaseDataSource.fetchBible()
+    }
+    
+    func fetchBooks(booksIDs: [Int]) async throws -> [Book] {
+        try await bibleDatabaseDataSource.fetchBooks(booksIDs: booksIDs)
     }
 
 }

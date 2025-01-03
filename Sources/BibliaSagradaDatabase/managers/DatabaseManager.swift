@@ -9,7 +9,8 @@ import Foundation
 import RealmSwift
 
 protocol DatabaseManager {
-    func fetchObject<T: RealmFetchable, R>(_ type: T.Type, wrapper: any Wrapper<[T], R>) async throws -> R
+    func fetchObject<T: Object, R>(_ type: T.Type, wrapper: any Wrapper<[T], R>) async throws -> R
+    func fetchObjects<T: Object, V: Sendable, R>(ofType type: T.Type, property: String, in values: [V], wrapper: any Wrapper<T, R>) async throws -> [R]
 }
 
 final class DatabaseManagerImpl: DatabaseManager, @unchecked Sendable {
@@ -41,7 +42,7 @@ final class DatabaseManagerImpl: DatabaseManager, @unchecked Sendable {
         }
     }
     
-    func fetchObject<T, R>(_ type: T.Type, wrapper: any Wrapper<[T], R>) async throws -> R where T : RealmFetchable {
+    func fetchObject<T, R>(_ type: T.Type, wrapper: any Wrapper<[T], R>) async throws -> R where T : Object {
         try await withCheckedThrowingContinuation { continuation in
             queue.async { [weak self] in
                 guard let self else {
@@ -51,6 +52,22 @@ final class DatabaseManagerImpl: DatabaseManager, @unchecked Sendable {
                 
                 let objects = Array(self.realm.objects(type))
                 let object: R = wrapper.map(objects)
+                continuation.resume(returning: object)
+            }
+        }
+    }
+    
+    func fetchObjects<T, V, R>(ofType type: T.Type, property: String, in values: [V], wrapper: any Wrapper<T, R>) async throws -> [R] where T : Object, V : Sendable {
+        try await withCheckedThrowingContinuation { continuation in
+            queue.async { [weak self] in
+                guard let self else {
+                    continuation.resume(throwing: BSError.objectDetached)
+                    return
+                }
+                
+                let predicate = NSPredicate(format: "\(property) IN %@", values)
+                let objects = Array(self.realm.objects(type).filter(predicate))
+                let object: [R] = objects.compactMap({ wrapper.map($0) })
                 continuation.resume(returning: object)
             }
         }
