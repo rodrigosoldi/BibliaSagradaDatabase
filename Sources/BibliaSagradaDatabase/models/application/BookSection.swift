@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct BookSection {
+public struct BookSection: Sendable {
     public let id: UUID
     public let title: String
     public let type: BookSectionType
