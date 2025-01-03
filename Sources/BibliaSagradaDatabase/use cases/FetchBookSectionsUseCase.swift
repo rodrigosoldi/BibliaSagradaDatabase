@@ -59,7 +59,7 @@ public struct FetchBookSectionsUseCaseImpl: FetchBookSectionsUseCase {
                 type: .evangelhos,
                 bookIDs: K.evangelhos),
             BookSection(
-                title: "Atos dos Apóstolos",
+                title: "Atos",
                 type: .atosDosApostolos,
                 bookIDs: K.atosDosApostolos),
             BookSection(
